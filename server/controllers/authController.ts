@@ -38,9 +38,7 @@ const authController = {
         return res.status(400).json({ msg: "Неверный пароль" })
       }
       if (process.env.TOKEN_KEY) {
-        const token = jsonwebtoken.sign({ id: user._id }, process.env.TOKEN_KEY, {
-          expiresIn: "12h",
-        })
+        const token = jsonwebtoken.sign({ id: user._id }, process.env.TOKEN_KEY)
         return res.send({ token })
       }
 

@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express"
-import jsonwebtoken, { JwtPayload } from "jsonwebtoken"
-import User from "../models/User"
+import jsonwebtoken from "jsonwebtoken"
 
 const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -11,11 +10,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
 
     if (process.env.TOKEN_KEY) {
       const data = jsonwebtoken.verify(token, process.env.TOKEN_KEY)
-
-      if (typeof data !== "string") {
-        const user = await User.findOne({ _id: data.id })
-        if (user) next()
-      }
+      next()
     }
   } catch (e) {
     console.log(e)
