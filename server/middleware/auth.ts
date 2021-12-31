@@ -9,7 +9,8 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     if (process.env.TOKEN_KEY) {
-      const data = jsonwebtoken.verify(token, process.env.TOKEN_KEY)
+      const data = jsonwebtoken.verify(token.split(' ')[1], process.env.TOKEN_KEY)
+      console.log(token);
       next()
     }
   } catch (e) {
