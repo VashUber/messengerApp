@@ -1,0 +1,1 @@
+export type tokenType = null | string
