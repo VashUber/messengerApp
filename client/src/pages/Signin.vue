@@ -3,7 +3,7 @@
     <h2 class="signin__title">Вход</h2>
     <form action="#" @submit.prevent class="signin__form">
       <label class="signin__label">
-        <VInput placeholder="Введите почту" type="text" v-model="email" class="signin__input" />
+        <VInput placeholder="Введите почту" type="email" v-model="email" class="signin__input" />
       </label>
       <label class="signin__label">
         <VInput placeholder="Введите пароль" type="password" v-model="password" class="signin__input" />
@@ -11,6 +11,7 @@
       <VButton text="Войти" class="signin__button" @click="signin" />
     </form>
     <router-link to="/signup" class="signin__link">У вас еще нет аккаунта?</router-link>
+    {{ authStore.token }}
   </div>
 </template>
 
@@ -19,14 +20,18 @@
   import useAuthStore from "../store/authStore"
   import VInput from "../components/VInput.vue"
   import VButton from "../components/VButton.vue"
+  import { useRouter } from "vue-router"
 
   const email = ref("")
   const password = ref("")
   const authStore = useAuthStore()
+  const router = useRouter()
   const signin = () => {
-    authStore.signin(email.value, password.value)
-    email.value = ""
-    password.value = ""
+    authStore.signin(email.value, password.value).then(() => {
+      email.value = ""
+      password.value = ""
+      router.push({ name: "Main" })
+    })
   }
 </script>
 

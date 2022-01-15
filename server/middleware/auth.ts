@@ -9,9 +9,11 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     if (process.env.TOKEN_KEY) {
-      const data = jsonwebtoken.verify(token.split(' ')[1], process.env.TOKEN_KEY)
-      console.log(token);
-      next()
+      const data = jsonwebtoken.verify(token.split(" ")[1], process.env.TOKEN_KEY, (error, user) => {
+        if (error) return res.status(403).json("Токен не валидный")
+
+        next()
+      })
     }
   } catch (e) {
     console.log(e)
