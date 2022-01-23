@@ -11,7 +11,6 @@
       <VButton text="Войти" class="signin__button" @click="signin" />
     </form>
     <router-link to="/signup" class="signin__link">У вас еще нет аккаунта?</router-link>
-    {{ authStore.token }}
   </div>
 </template>
 
@@ -26,6 +25,7 @@
   const password = ref("")
   const authStore = useAuthStore()
   const router = useRouter()
+  
   const signin = () => {
     authStore.signin(email.value, password.value).then(() => {
       email.value = ""
