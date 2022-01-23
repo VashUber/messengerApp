@@ -4,7 +4,15 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import { onMounted } from "vue"
+  import useAuthStore from "./store/authStore"
+
+  const authStore = useAuthStore()
+  onMounted(() => {
+    if (authStore.getToken) authStore.setUser()
+  })
+</script>
 
 <style lang="scss">
   @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");

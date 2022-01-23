@@ -1,1 +1,5 @@
-export type tokenType = null | string
+export type nullableString = null | string
+export interface User {
+  name: String
+  email: String
+}

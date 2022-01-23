@@ -36,8 +36,8 @@ const authController = {
         return res.status(400).json({ msg: "Неверный пароль" })
       }
       if (process.env.TOKEN_KEY) {
-        const token = jsonwebtoken.sign({ id: user._id }, process.env.TOKEN_KEY)
-        return res.send({ token })
+        const token = jsonwebtoken.sign({ email: user.email }, process.env.TOKEN_KEY)
+        return res.send({ token, email: user.email })
       }
 
       return res.json({ msg: "Непредвиденная ошибка" })
