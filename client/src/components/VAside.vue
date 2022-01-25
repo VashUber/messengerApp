@@ -45,7 +45,8 @@ const setCurrentChat = (elem: string) => {
 <style scoped lang="scss">
 .aside {
 	grid-area: aside;
-	width: 300px;
+	width: 18%;
+	min-width: 200px;
 	background: $secondary;
 	display: flex;
 	flex-direction: column;
@@ -94,7 +95,8 @@ const setCurrentChat = (elem: string) => {
 		border-radius: 0px;
 
 		&_fixed {
-			width: 300px;
+			width: 18%;
+			min-width: 200px;
 			position: fixed;
 			left: 0;
 			bottom: 0;

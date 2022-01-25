@@ -6,11 +6,17 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import { io } from 'socket.io-client'
 import useAuthStore from './store/authStore'
 
 const authStore = useAuthStore()
 onMounted(() => {
 	if (authStore.getToken) authStore.setUser()
+	io('ws://localhost:30054', {
+		auth: {
+			token: authStore.getToken
+		}
+	})
 })
 </script>
 

@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { nullableString, User } from '../types'
 import { VueCookieNext } from 'vue-cookie-next'
-import { useRouter } from 'vue-router'
 
 const useAuthStore = defineStore({
 	id: 'auth',
