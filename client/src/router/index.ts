@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
 import Signin from "../pages/Signin.vue"
 import Signup from "../pages/Signup.vue"
-import Main from "../pages/Main.vue"
+import Messenger from "../pages/Messenger.vue"
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -21,9 +21,9 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    name: "Main",
+    name: "Messenger",
     path: "/",
-    component: Main,
+    component: Messenger,
     meta: {
       requiresAuth: true,
     },

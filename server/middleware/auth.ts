@@ -16,7 +16,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
         if (error) return res.status(403).json("Токен не валидный")
 
         const potentialUser = await User.findOne({ email })
-        if (user && potentialUser.email === user.email) next()
+        if (typeof user !== "string" && user && potentialUser.email === user.email) next()
       })
     }
   } catch (e) {
