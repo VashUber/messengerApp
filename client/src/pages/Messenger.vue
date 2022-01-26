@@ -5,7 +5,7 @@
 			:currentChat="currentChat"
 			@setCurrentChat="setCurrentChat"
 		/>
-		<VChat v-if="currentChat" />
+		<VChat v-if="!currentChat" />
 		<div v-else class="chat-else">
 			<span class="chat-else__msg">Выберете чат</span>
 		</div>
@@ -27,7 +27,7 @@ const items = ['Саша', 'Егор']
 <style scoped lang="scss">
 .messenger {
 	display: grid;
-	grid-template-columns: 300px 1fr;
+	grid-template-columns: minmax(200px, 18%) 1fr;
 	grid-template-areas: 'aside chat';
 }
 

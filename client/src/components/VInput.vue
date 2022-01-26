@@ -20,12 +20,7 @@ const { type, placeholder, modelValue } =
 	outline: none;
 	border: none;
 	transition: all 0.15s ease-in-out;
-	color: $placeholder;
+	color: $primary;
 	font-size: 20px;
-
-	&:focus {
-		box-shadow: 0px 0px 1px 0px $primary;
-		color: $primary;
-	}
 }
 </style>

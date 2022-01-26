@@ -13,6 +13,9 @@ const useAuthStore = defineStore({
 	getters: {
 		getToken(): nullableString {
 			return this.token
+		},
+		getUser(): User {
+			return this.user
 		}
 	},
 	actions: {

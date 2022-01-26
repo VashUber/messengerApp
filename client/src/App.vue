@@ -12,11 +12,7 @@ import useAuthStore from './store/authStore'
 const authStore = useAuthStore()
 onMounted(() => {
 	if (authStore.getToken) authStore.setUser()
-	io('ws://localhost:30054', {
-		auth: {
-			token: authStore.getToken
-		}
-	})
+	io('ws://localhost:30054')
 })
 </script>
 
