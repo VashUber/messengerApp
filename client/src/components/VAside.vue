@@ -1,6 +1,6 @@
 <template>
 	<aside class="aside">
-		<VButton text="Создать чат" class="aside__button button_secondary-100" />
+		<VButton class="aside__button button_secondary-100">Создать чат</VButton>
 		<div class="aside__wrapper">
 			<div
 				v-for="item in items"
@@ -14,10 +14,11 @@
 		</div>
 
 		<VButton
-			text="Выйти"
 			class="aside__button aside__button_fixed button_secondary-100"
 			@click="signout"
-		/>
+		>
+			Выйти
+		</VButton>
 	</aside>
 </template>
 

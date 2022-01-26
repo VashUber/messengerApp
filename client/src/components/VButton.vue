@@ -1,10 +1,10 @@
 <template>
-	<button class="button">{{ text }}</button>
+	<button class="button">
+		<slot></slot>
+	</button>
 </template>
 
-<script setup lang="ts">
-const { text } = defineProps<{ text: string }>()
-</script>
+<script setup lang="ts"></script>
 
 <style scoped lang="scss">
 .button {
