@@ -5,7 +5,7 @@ import User from "../models/User"
 const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.headers.authorization
-    const email = req.body.email
+    const email = req.body.email || req.query.email
 
     if (!token) {
       return res.status(401).json("Пользователь не авторизован")

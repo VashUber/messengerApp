@@ -45,9 +45,10 @@ const useAuthStore = defineStore({
 		},
 		async setUser() {
 			if (this.token && this.email) {
-				const response = await axios.post(
-					'http://localhost:30054/api/getuser',
-					{ email: this.email },
+
+				const userEmail = this.email
+				const response = await axios.get(
+					`http://localhost:30054/api/getuser?email=${userEmail}`,
 					{
 						headers: {
 							'content-Type': 'application/json',
