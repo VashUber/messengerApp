@@ -18,7 +18,7 @@
 					class="signin__input"
 				/>
 			</label>
-			<VButton text="Войти" class="signin__button" @click="signin" />
+			<VButton class="signin__button button_secondary-100" @click="signin">Войти</VButton>>
 		</form>
 		<router-link to="/signup" class="signin__link"
 			>У вас еще нет аккаунта?</router-link

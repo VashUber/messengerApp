@@ -21,11 +21,9 @@
 					class=""
 				/>
 			</label>
-			<VButton
-				text="Зарегистрироваться"
-				class="signup__button"
-				@click="signup"
-			/>
+			<VButton class="signup__button button_secondary-100" @click="signup">
+				Зарегистрироваться
+			</VButton>
 		</form>
 		<router-link to="/signin" class="signup__link"
 			>Уже есть аккаунт?</router-link

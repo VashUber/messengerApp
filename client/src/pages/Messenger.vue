@@ -5,7 +5,7 @@
 			:currentChat="currentChat"
 			@setCurrentChat="setCurrentChat"
 		/>
-		<VChat v-if="!currentChat" />
+		<VChat v-if="currentChat" />
 		<div v-else class="chat-else">
 			<span class="chat-else__msg">Выберете чат</span>
 		</div>

@@ -3,14 +3,14 @@
 		class="textarea"
 		@input="$emit('update:modelValue', $event?.target?.value)"
 		:value="modelValue"
-		placeholder="Напишите сообщение"
+		:placeholder="placeholder"
 	/>
 </template>
 
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-const { modelValue } = defineProps<{ modelValue: string }>()
+const { modelValue, placeholder } = defineProps<{ modelValue: string, placeholder: string }>()
 </script>
 
 <style scoped lang="scss">

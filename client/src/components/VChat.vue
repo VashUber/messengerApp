@@ -15,6 +15,7 @@
 				v-model="newMessage"
 				class="chat__textarea"
 				@keydown.enter="sendMessage"
+				placeholder="Напишите сообщение..."
 			/>
 			<VButton class="chat__button" @click="sendMessage">
 				<svg
@@ -51,8 +52,10 @@ import { ref } from 'vue'
 const newMessage = ref('')
 const messages = ref<Array<{ name: string; text: string }>>([])
 const sendMessage = () => {
-	messages.value.push({ name: 'samara', text: newMessage.value })
-	newMessage.value = ''
+	if (newMessage.value) {
+		messages.value.push({ name: 'samara', text: newMessage.value })
+		newMessage.value = ''
+	}
 }
 </script>
 
