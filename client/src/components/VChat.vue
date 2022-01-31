@@ -8,7 +8,7 @@
 				:text="message?.text"
 			/>
 
-			<VMessage name="Саша" text="Хуй" />
+			<VMessage name="Саша" text="Привет" />
 		</div>
 		<div class="chat__bottom">
 			<VTextarea

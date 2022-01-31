@@ -1,6 +1,8 @@
 <template>
 	<aside class="aside">
-		<VButton class="aside__button button_secondary-100">Создать чат</VButton>
+		<VButton class="aside__button button_secondary-100" @click="toggleModal">
+			Создать чат
+		</VButton>
 		<div class="aside__wrapper">
 			<div
 				v-for="item in items"
@@ -31,7 +33,7 @@ import useAuthStore from '../store/authStore'
 
 const { items, currentChat } =
 	defineProps<{ items: vAsideItem; currentChat: string | null }>()
-const emits = defineEmits(['setCurrentChat'])
+const emits = defineEmits(['setCurrentChat', 'toggleModal'])
 const router = useRouter()
 const authStore = useAuthStore()
 const signout = () => {
@@ -40,6 +42,9 @@ const signout = () => {
 }
 const setCurrentChat = (elem: string) => {
 	emits('setCurrentChat', elem)
+}
+const toggleModal = () => {
+	emits('toggleModal')
 }
 </script>
 
