@@ -1,6 +1,9 @@
 <template>
 	<div class="messenger">
-		<VModal v-show="modalIsVisible" @toggleModal="toggleModal" />
+		<transition name="modal">
+			<VModal v-show="modalIsVisible" @toggleModal="toggleModal" />
+		</transition>
+
 		<VAside
 			:items="items"
 			:currentChat="currentChat"
@@ -55,5 +58,15 @@ const items = ['Саша', 'Егор']
 		justify-content: center;
 		align-items: center;
 	}
+}
+
+.modal-enter-active,
+.modal-leave-active {
+	transition: all 0.35s;
+}
+.modal-leave-to,
+.modal-enter-from {
+	opacity: 0;
+	transform: scale(1.15);
 }
 </style>
