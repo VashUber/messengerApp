@@ -6,12 +6,16 @@
 		<div class="aside__wrapper">
 			<div
 				v-for="item in items"
-				:key="item"
+				:key="item.chatId"
 				class="aside__item"
-				:class="{ aside__item_active: currentChat === item }"
-				@click="setCurrentChat(item)"
+				:class="{
+					aside__item_active:
+						currentChat === item.firstUser || currentChat === item.secondUser
+				}"
+				@click="setCurrentChat(item.firstUser)"
 			>
-				{{ item }}
+				<span v-if="item.firstUser !== user.email">{{ item.firstUser }}</span>
+				<span v-else>{{ item.secondUser }}</span>
 			</div>
 		</div>
 
@@ -25,24 +29,33 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { computed, defineProps } from 'vue'
 import { useRouter } from 'vue-router'
-import { vAsideItem } from '../types'
 import VButton from './VButton.vue'
 import useAuthStore from '../store/authStore'
+import useMessengerStore from '../store/messengerStore'
+import { Chat } from '../types'
 
-const { items, currentChat } =
-	defineProps<{ items: vAsideItem; currentChat: string | null }>()
-const emits = defineEmits(['setCurrentChat', 'toggleModal'])
 const router = useRouter()
 const authStore = useAuthStore()
+const messengerStore = useMessengerStore()
+
+const { items, currentChat } =
+	defineProps<{ items: Array<Chat>; currentChat: string | null }>()
+const emits = defineEmits(['setCurrentChat', 'toggleModal'])
+
 const signout = () => {
 	authStore.signout()
+	messengerStore.signout()
 	router.push({ name: 'Signin' })
 }
+
 const setCurrentChat = (elem: string) => {
 	emits('setCurrentChat', elem)
 }
+
+const user = computed(() => authStore.getUser)
+
 const toggleModal = () => {
 	emits('toggleModal')
 }

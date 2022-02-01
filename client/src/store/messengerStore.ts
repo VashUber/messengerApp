@@ -7,7 +7,11 @@ const useMessengerStore = defineStore({
 	state: () => ({
 		chats: [] as Array<Chat>
 	}),
-	getters: {},
+	getters: {
+		getChats(): Array<Chat> {
+			return this.chats
+		}
+	},
 	actions: {
 		async setChats(email: string, token: string) {
 			const userEmail = email
@@ -22,7 +26,10 @@ const useMessengerStore = defineStore({
 			)
 			const { chats } = response.data
 
-			this.chats = [this.chats, ...chats]
+			this.chats = [...this.chats, ...chats]
+		},
+		signout() {
+			this.chats = []
 		}
 	}
 })

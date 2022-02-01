@@ -18,20 +18,39 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { io } from 'socket.io-client'
 import VAside from '../components/VAside.vue'
 import VChat from '../components/VChat.vue'
 import VModal from '../components/VModal.vue'
+import useAuthStore from '../store/authStore'
+import useMessengerStore from '../store/messengerStore'
+
+const authStore = useAuthStore()
+const messengerStore = useMessengerStore()
 
 const currentChat = ref<string | null>(null)
 const modalIsVisible = ref(false)
+
 const setCurrentChat = (elem: string) => {
 	currentChat.value = elem
 }
 const toggleModal = () => {
 	modalIsVisible.value = !modalIsVisible.value
 }
-const items = ['Саша', 'Егор']
+
+const items = computed(() => messengerStore.getChats)
+
+onMounted(() => {
+	if (authStore.getToken) {
+		authStore
+			.setUser()
+			.then(() =>
+				messengerStore.setChats(authStore.getUser.email, authStore.getToken)
+			)
+	}
+	io('ws://localhost:30054')
+})
 </script>
 
 <style scoped lang="scss">

@@ -7,7 +7,6 @@
 				:name="message?.name"
 				:text="message?.text"
 			/>
-
 			<VMessage name="Саша" text="Привет" />
 		</div>
 		<div class="chat__bottom">

@@ -1,5 +1,4 @@
 export type nullableString = null | string
-export type vAsideItem = Array<string>
 export interface User {
 	name: string
 	email: string
