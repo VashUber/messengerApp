@@ -1,6 +1,12 @@
 export type nullableString = null | string
 export type vAsideItem = Array<string>
 export interface User {
-  name: String
-  email: String
+	name: string
+	email: string
+}
+
+export interface Chat {
+	firstUser: string
+	secondUser: string
+	chatId: string
 }

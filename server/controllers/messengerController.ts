@@ -28,7 +28,20 @@ const messengerController = {
     }
   },
 
-  async getChats(req: Request, res: Response) {},
+  async getChats(req: Request, res: Response) {
+    try {
+      const { email } = req.query
+      const chats = await Chat.find({
+        $or: [{ firstUser: email }, { secondUser: email }],
+      })
+
+      console.log(chats)
+
+      return res.send({ chats })
+    } catch (e) {
+      console.log(e)
+    }
+  },
 
   async getMesseges(req: Request, res: Response) {},
 }
