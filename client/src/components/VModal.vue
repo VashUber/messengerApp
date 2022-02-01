@@ -1,5 +1,5 @@
 <template>
-	<div class="modal" v-bind="$attrs">
+	<div class="modal">
 		<div class="modal__item">
 			<button class="modal__button-close" @click="toggleModal">
 				<svg
@@ -28,22 +28,43 @@
 					v-model="email"
 					class="modal__input"
 				/>
-				<VButton class="modal__button">Создать чат</VButton>
+				<VButton class="modal__button" @click="createChat">Создать чат</VButton>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
+import axios from 'axios'
 import { defineEmits, ref } from 'vue'
 import VInput from './VInput.vue'
 import VButton from './VButton.vue'
+import useAuthStore from '../store/authStore'
 
+const authStore = useAuthStore()
 const emits = defineEmits(['toggleModal'])
 const email = ref('')
+const modal = ref<HTMLDivElement | null>(null)
 const toggleModal = () => {
 	emits('toggleModal')
 	email.value = ''
+}
+const createChat = () => {
+	if (email.value.length !== 0) {
+		axios.post(
+			'http://localhost:30054/api/createChat/',
+			{
+				emailToFind: email.value,
+				email: authStore.getUser.email
+			},
+			{
+				headers: {
+					'content-Type': 'application/json',
+					Authorization: `Bearer ${authStore.getToken}`
+				}
+			}
+		)
+	}
 }
 </script>
 

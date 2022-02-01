@@ -8,6 +8,7 @@ const Routes = (app: Express) => {
   app.post("/auth/signup", authController.signup)
   app.post("/auth/signin", authController.singin)
   app.get("/api/getuser", auth, userController.getUser)
+  app.post("/api/createChat", auth, messengerController.createChat)
 }
 
 export default Routes

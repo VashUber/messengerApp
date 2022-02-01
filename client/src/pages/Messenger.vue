@@ -1,7 +1,7 @@
 <template>
 	<div class="messenger">
 		<transition name="modal">
-			<VModal v-show="modalIsVisible" @toggleModal="toggleModal" />
+			<VModal v-if="modalIsVisible" @toggleModal="toggleModal" />
 		</transition>
 
 		<VAside
