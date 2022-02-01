@@ -10,12 +10,12 @@
 				class="aside__item"
 				:class="{
 					aside__item_active:
-						currentChat === item.firstUser || currentChat === item.secondUser
+						currentChat === item.firstUser.email || currentChat === item.secondUser.email
 				}"
-				@click="setCurrentChat(item.firstUser)"
+				@click="setCurrentChat(item.firstUser.email)"
 			>
-				<span v-if="item.firstUser !== user.email">{{ item.firstUser }}</span>
-				<span v-else>{{ item.secondUser }}</span>
+				<span v-if="item.firstUser.email !== user.email">{{ item.firstUser.name }}</span>
+				<span v-else>{{ item.secondUser.name }}</span>
 			</div>
 		</div>
 

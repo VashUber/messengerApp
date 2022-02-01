@@ -5,7 +5,7 @@ export interface User {
 }
 
 export interface Chat {
-	firstUser: string
-	secondUser: string
+	firstUser: User
+	secondUser: User
 	chatId: string
 }

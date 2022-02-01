@@ -16,9 +16,23 @@ const messengerController = {
         return res.status(400).json({ msg: "Нельзя создать час с собой" })
       }
 
+      const { name: firstUserName, email: firstUserEmail } = await User.findOne({
+        email: email,
+      })
+
+      const { name: secondUserName, email: secondUserEmail } = await User.findOne({
+        email: emailToFind,
+      })
+
       const chat = new Chat({
-        firstUser: email,
-        secondUser: emailToFind,
+        firstUser: {
+          email: firstUserEmail,
+          name: firstUserName,
+        },
+        secondUser: {
+          email: secondUserEmail,
+          name: secondUserName,
+        },
         chatId: uniqid("samara"),
       })
 
@@ -32,10 +46,8 @@ const messengerController = {
     try {
       const { email } = req.query
       const chats = await Chat.find({
-        $or: [{ firstUser: email }, { secondUser: email }],
+        $or: [{ "firstUser.email": email }, { "secondUser.email": email }],
       })
-
-      console.log(chats)
 
       return res.send({ chats })
     } catch (e) {
