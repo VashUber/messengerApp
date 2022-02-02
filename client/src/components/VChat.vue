@@ -1,12 +1,15 @@
 <template>
 	<div class="chat">
-		<div class="chat__messages">
+		<div class="chat__messages" v-if="messages">
 			<VMessage
-				v-for="message in messages"
+				v-for="message in messages.messages"
 				:key="message?.text"
-				:name="message?.from"
-				:text="message?.text"
+				:message="message"
+				:chatId="currentChatId"
+				:user="user"
+				:secondUser="secondUser"
 			/>
+			{{ messages.chatId }}
 		</div>
 		<div class="chat__bottom">
 			<VTextarea
@@ -45,11 +48,24 @@
 import VTextarea from './VTextarea.vue'
 import VMessage from './VMessage.vue'
 import VButton from './VButton.vue'
-import { Message } from '../types'
-import { ref } from 'vue'
+import { MessageRender } from '../types'
+import { computed, ref } from 'vue'
+import useMessengerStore from '../store/messengerStore'
+import useAuthStore from '../store/authStore'
+
+const authStore = useAuthStore()
+const user = computed(() => authStore.getUser)
 
 const newMessage = ref('')
-const { messages } = defineProps<{ messages: Array<Message> }>()
+
+const { messages, currentChatId } = defineProps<{ messages: MessageRender, currentChatId: string }>()
+
+const messengerStore = useMessengerStore()
+const getChatById = messengerStore.getChatById
+const chat = computed(() => getChatById(currentChatId))
+
+const secondUser = chat.value?.firstUser.email !== user.value.email ? chat.value?.firstUser.name : chat.value?.secondUser.name
+
 const emits = defineEmits(['sendMessage'])
 const sendMessage = () => {
 	if (newMessage.value) {

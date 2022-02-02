@@ -10,7 +10,7 @@
 			@setCurrentChat="setCurrentChat"
 			@toggleModal="toggleModal"
 		/>
-		<VChat v-if="currentChat" @sendMessage="sendMessage" :messages="messages" />
+		<VChat v-if="currentChat" @sendMessage="sendMessage" :messages="messages" :currentChatId="currentChatId" />
 		<div v-else class="chat-else">
 			<span class="chat-else__msg">Выберите чат</span>
 		</div>
@@ -25,6 +25,7 @@ import VChat from '../components/VChat.vue'
 import VModal from '../components/VModal.vue'
 import useAuthStore from '../store/authStore'
 import useMessengerStore from '../store/messengerStore'
+import { MessageRender } from '../types'
 
 const authStore = useAuthStore()
 const messengerStore = useMessengerStore()
@@ -45,9 +46,8 @@ const items = computed(() => messengerStore.getChats)
 const user = computed(() => authStore.getUser)
 const socket = ref(io('ws://localhost:30054'))
 const getMessagesByChatId = messengerStore.getMessages
-const messages = currentChat.value
-	? computed(() => getMessagesByChatId(currentChatId.value))
-	: []
+
+const messages = computed(() : MessageRender => getMessagesByChatId(currentChatId.value))
 
 const sendMessage = (text: string) => {
 	const chat = items.value.find(elem => elem.chatId === currentChatId.value)
@@ -56,13 +56,16 @@ const sendMessage = (text: string) => {
 		chat?.firstUser.email === user.value.email
 			? chat.secondUser.email
 			: chat?.firstUser.email
-
-	const from = user.value.email
-	socket.value.emit('sendMessage', to, from, text)
+	if (to) {
+		const from = user.value.email
+		messengerStore.addNewMessage(to, from, text, currentChatId.value)
+		socket.value.emit('sendMessage', to, from, text)
+	}
 }
 
 socket.value.on('getMessage', data => {
-	console.log(data.to, data.from, data.text)
+	console.log(data)
+	messengerStore.addNewMessage(data.to, data.from, data.text, currentChatId.value)
 })
 
 onMounted(async () => {

@@ -1,20 +1,23 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
-import { Chat, Message } from '../types'
+import { Chat, Message, MessageRender } from '../types'
 
 const useMessengerStore = defineStore({
 	id: 'messengerStore',
 	state: () => ({
 		chats: [] as Array<Chat>,
-		messages: [] as Array<Message>
+		messages: [] as Array<{ chatId: string; messages: Array<Message> }>
 	}),
 	getters: {
 		getChats(): Array<Chat> {
 			return this.chats
 		},
-		getMessages: (state) => (chatId: string) => {
-			return state.messages.filter(elem => elem.chatId === chatId)
-		} 
+		getMessages: state => (chatId: string) : MessageRender | undefined => {
+			return state.messages.find(elem => elem.chatId === chatId)
+		},
+		getChatById: state => (chatId: string) => {
+			return state.chats.find(elem => elem.chatId === chatId)
+		}
 	},
 	actions: {
 		async setChats(email: string, token: string) {
@@ -48,6 +51,11 @@ const useMessengerStore = defineStore({
 			)
 
 			this.setChats(email, token)
+		},
+		addNewMessage(to: string, from: string, text: string, chatId: string) {
+			const chat = this.messages.find(elem => elem.chatId === chatId)
+			if (chat) chat.messages.push({ to, from, text })
+			else this.messages.push({ chatId, messages: [{ to, from, text }] })
 		},
 		signout() {
 			this.chats = []

@@ -14,5 +14,10 @@ export interface Message {
 	text: string
 	to: string
 	from: string
+	chatId?: string
+}
+
+export interface MessageRender {
 	chatId: string
+	messages: Array<Message>
 }

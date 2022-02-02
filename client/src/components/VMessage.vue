@@ -2,23 +2,25 @@
 	<div
 		class="message"
 		:class="{
-			message_right: user.name !== name,
-			message_left: user.name === name
+			message_right: message.from === user.email
 		}"
 	>
-		<h2>{{ name }}</h2>
-		<p>{{ text }}</p>
+		<h2 v-if="message.from === user.email">{{ user.name }}</h2>
+		<h2 v-else>{{ secondUser }}</h2>
+		<p>{{ message.text }}</p>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { computed, defineProps } from 'vue'
-import useAuthStore from '../store/authStore'
+import { Message, User } from '../types'
 
-const authStore = useAuthStore()
-const user = computed(() => authStore.getUser)
-
-const { text, name } = defineProps<{ text: string; name: string }>()
+const { message, chatId, user, secondUser } = defineProps<{
+	message: Message
+	chatId: string
+	user: User
+	secondUser: string
+}>()
 </script>
 
 <style scoped lang="scss">
@@ -38,10 +40,6 @@ const { text, name } = defineProps<{ text: string; name: string }>()
 	&_right {
 		margin-left: auto;
 		margin-right: 10px;
-	}
-
-	&_left {
-		margin-right: auto;
 	}
 }
 </style>
