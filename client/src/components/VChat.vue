@@ -1,7 +1,5 @@
 <template>
 	<div class="chat">
-		{{ chat }}
-		{{ currentChatId }}
 		<div class="chat__messages" v-if="messages">
 			<VMessage
 				v-for="message in messages.messages"
@@ -9,7 +7,7 @@
 				:message="message"
 				:chatId="currentChatId"
 				:user="user"
-				:secondUser="secondUser"
+				:secondUser="secondUser.name"
 			/>
 		</div>
 		<div class="chat__bottom">
@@ -55,22 +53,14 @@ import useMessengerStore from '../store/messengerStore'
 import useAuthStore from '../store/authStore'
 
 const authStore = useAuthStore()
-const user = computed(() => authStore.getUser)
+const messengerStore = useMessengerStore()
+const { messages, currentChatId } = defineProps<{ messages: MessageRender; currentChatId: string }>()
+const emits = defineEmits(['sendMessage'])
 
+const user = computed(() => authStore.getUser)
+const secondUser = computed(() => messengerStore.getSecondUser)
 const newMessage = ref('')
 
-const { messages, currentChatId } =
-	defineProps<{ messages: MessageRender; currentChatId: string }>()
-
-const messengerStore = useMessengerStore()
-const getChatById = messengerStore.getChatById
-
-const chat = computed(() => getChatById(currentChatId))
-
-
-const secondUser = computed(() => messengerStore.getSecondUser )
-
-const emits = defineEmits(['sendMessage'])
 const sendMessage = () => {
 	if (newMessage.value) {
 		emits('sendMessage', newMessage.value)

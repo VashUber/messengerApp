@@ -10,7 +10,7 @@
 			@toggleModal="toggleModal"
 		/>
 		<VChat
-			v-if="currentChat"
+			v-if="currentChatId"
 			@sendMessage="sendMessage"
 			:messages="messages"
 			:currentChatId="currentChatId"
@@ -34,39 +34,39 @@ import { MessageRender } from '../types'
 const authStore = useAuthStore()
 const messengerStore = useMessengerStore()
 
-const currentChat = ref<string | null>(null)
 const currentChatId = ref<string | null>(null)
 const modalIsVisible = ref(false)
 
 const setCurrentChat = (elem: string, chatId: string) => {
-	currentChat.value = elem
 	currentChatId.value = chatId
 	messengerStore.setSecondUser(user.value.email, currentChatId.value)
 }
 const toggleModal = () => {
 	modalIsVisible.value = !modalIsVisible.value
 }
+const getMessagesByChatId = messengerStore.getMessages
 
 const items = computed(() => messengerStore.getChats)
 const user = computed(() => authStore.getUser)
-const socket = ref(io('ws://localhost:30054'))
-const getMessagesByChatId = messengerStore.getMessages
-
 const messages = computed(
 	(): MessageRender => getMessagesByChatId(currentChatId.value)
 )
+const chat = computed(() => messengerStore.getChatById(currentChatId.value))
+
+const socket = ref(io('ws://localhost:30054'))
 
 const sendMessage = (text: string) => {
-	const chat = items.value.find(elem => elem.chatId === currentChatId.value)
+	const to = computed(() => messengerStore.getSecondUser)
 
-	const to =
-		chat?.firstUser.email === user.value.email
-			? chat.secondUser.email
-			: chat?.firstUser.email
 	if (to) {
 		const from = user.value.email
-		messengerStore.addNewMessage(to, from, text, currentChatId.value)
-		socket.value.emit('sendMessage', to, from, text)
+		messengerStore.addNewMessage(
+			to.value.email,
+			from,
+			text,
+			currentChatId.value
+		)
+		socket.value.emit('sendMessage', to.value.email, from, text)
 	}
 }
 
