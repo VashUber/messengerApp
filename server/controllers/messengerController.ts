@@ -37,6 +37,8 @@ const messengerController = {
       })
 
       chat.save()
+
+      return res.send({ msg: "Чат успешно создан" })
     } catch (e) {
       console.log(e)
     }

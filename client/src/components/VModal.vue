@@ -36,12 +36,15 @@
 
 <script setup lang="ts">
 import axios from 'axios'
-import { defineEmits, ref } from 'vue'
+import { computed, defineEmits, ref } from 'vue'
 import VInput from './VInput.vue'
 import VButton from './VButton.vue'
 import useAuthStore from '../store/authStore'
+import useMessengerStore from '../store/messengerStore'
 
 const authStore = useAuthStore()
+const messengerStore = useMessengerStore()
+
 const emits = defineEmits(['toggleModal'])
 const email = ref('')
 const modal = ref<HTMLDivElement | null>(null)
@@ -49,21 +52,13 @@ const toggleModal = () => {
 	emits('toggleModal')
 	email.value = ''
 }
+const user = computed(() => authStore.getUser)
+const token = computed(() => authStore.getToken)
+
 const createChat = () => {
 	if (email.value.length !== 0) {
-		axios.post(
-			'http://localhost:30054/api/createChat/',
-			{
-				emailToFind: email.value,
-				email: authStore.getUser.email
-			},
-			{
-				headers: {
-					'content-Type': 'application/json',
-					Authorization: `Bearer ${authStore.getToken}`
-				}
-			}
-		)
+		if (token.value)
+			messengerStore.createChat(email.value, user.value.email, token.value)
 	}
 }
 </script>

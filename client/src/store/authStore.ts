@@ -24,6 +24,7 @@ const useAuthStore = defineStore({
 				email,
 				password
 			})
+
 			this.token = response.data.token
 			this.email = response.data.email
 			VueCookieNext.setCookie('token', response.data.token)
@@ -45,7 +46,6 @@ const useAuthStore = defineStore({
 		},
 		async setUser() {
 			if (this.token && this.email) {
-
 				const userEmail = this.email
 				const response = await axios.get(
 					`http://localhost:30054/api/getuser?email=${userEmail}`,

@@ -26,7 +26,24 @@ const useMessengerStore = defineStore({
 			)
 			const { chats } = response.data
 
-			this.chats = [...this.chats, ...chats]
+			this.chats = [...chats]
+		},
+		async createChat(emailToFind: string, email: string, token: string) {
+			await axios.post(
+				'http://localhost:30054/api/createChat/',
+				{
+					emailToFind,
+					email
+				},
+				{
+					headers: {
+						'content-Type': 'application/json',
+						Authorization: `Bearer ${token}`
+					}
+				}
+			)
+
+			this.setChats(email, token)
 		},
 		signout() {
 			this.chats = []
