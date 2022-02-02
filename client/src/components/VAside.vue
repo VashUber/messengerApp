@@ -10,7 +10,7 @@
 				class="aside__item"
 				:class="{
 					aside__item_active:
-						currentChat === item.firstUser.email || currentChat === item.secondUser.email
+						currentChatId === item.chatId
 				}"
 				@click="setCurrentChat(item.firstUser.email, item.chatId)"
 			>
@@ -40,8 +40,8 @@ const router = useRouter()
 const authStore = useAuthStore()
 const messengerStore = useMessengerStore()
 
-const { items, currentChat } =
-	defineProps<{ items: Array<Chat>; currentChat: string | null }>()
+const { items, currentChatId } =
+	defineProps<{ items: Array<Chat>; currentChatId: string | null }>()
 const emits = defineEmits(['setCurrentChat', 'toggleModal'])
 
 const signout = () => {
