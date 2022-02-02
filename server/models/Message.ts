@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-const Messegechema = new mongoose.Schema({
+const Messagechema = new mongoose.Schema({
   chatId: {
     type: String,
     require: true,
@@ -11,6 +11,6 @@ const Messegechema = new mongoose.Schema({
   },
 })
 
-const Messege = mongoose.model("Messege", Messegechema)
+const Message = mongoose.model("Messege", Messagechema)
 
-export default Messege
+export default Message

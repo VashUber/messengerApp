@@ -13,7 +13,7 @@ const useMessengerStore = defineStore({
 			return this.chats
 		},
 		getMessages: (state) => (chatId: string) => {
-			
+			return state.messages.filter(elem => elem.chatId === chatId)
 		} 
 	},
 	actions: {

@@ -4,7 +4,7 @@
 			<VMessage
 				v-for="message in messages"
 				:key="message?.text"
-				:name="message?.name"
+				:name="message?.from"
 				:text="message?.text"
 			/>
 		</div>
@@ -45,13 +45,15 @@
 import VTextarea from './VTextarea.vue'
 import VMessage from './VMessage.vue'
 import VButton from './VButton.vue'
+import { Message } from '../types'
 import { ref } from 'vue'
 
 const newMessage = ref('')
-const messages = ref<Array<{ name: string; text: string }>>([])
+const { messages } = defineProps<{ messages: Array<Message> }>()
+const emits = defineEmits(['sendMessage'])
 const sendMessage = () => {
 	if (newMessage.value) {
-		messages.value.push({ name: 'samara', text: newMessage.value })
+		emits('sendMessage', newMessage.value)
 		newMessage.value = ''
 	}
 }

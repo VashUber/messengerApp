@@ -12,7 +12,7 @@
 					aside__item_active:
 						currentChat === item.firstUser.email || currentChat === item.secondUser.email
 				}"
-				@click="setCurrentChat(item.firstUser.email)"
+				@click="setCurrentChat(item.firstUser.email, item.chatId)"
 			>
 				<span v-if="item.firstUser.email !== user.email">{{ item.firstUser.name }}</span>
 				<span v-else>{{ item.secondUser.name }}</span>
@@ -50,8 +50,8 @@ const signout = () => {
 	router.push({ name: 'Signin' })
 }
 
-const setCurrentChat = (elem: string) => {
-	emits('setCurrentChat', elem)
+const setCurrentChat = (elem: string, chatId: string) => {
+	emits('setCurrentChat', elem, chatId)
 }
 
 const user = computed(() => authStore.getUser)

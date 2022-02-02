@@ -10,7 +10,7 @@
 			@setCurrentChat="setCurrentChat"
 			@toggleModal="toggleModal"
 		/>
-		<VChat v-if="currentChat" />
+		<VChat v-if="currentChat" @sendMessage="sendMessage" :messages="messages" />
 		<div v-else class="chat-else">
 			<span class="chat-else__msg">Выберите чат</span>
 		</div>
@@ -30,10 +30,12 @@ const authStore = useAuthStore()
 const messengerStore = useMessengerStore()
 
 const currentChat = ref<string | null>(null)
+const currentChatId = ref<string | null>(null)
 const modalIsVisible = ref(false)
 
-const setCurrentChat = (elem: string) => {
+const setCurrentChat = (elem: string, chatId: string) => {
 	currentChat.value = elem
+	currentChatId.value = chatId
 }
 const toggleModal = () => {
 	modalIsVisible.value = !modalIsVisible.value
@@ -42,6 +44,26 @@ const toggleModal = () => {
 const items = computed(() => messengerStore.getChats)
 const user = computed(() => authStore.getUser)
 const socket = ref(io('ws://localhost:30054'))
+const getMessagesByChatId = messengerStore.getMessages
+const messages = currentChat.value
+	? computed(() => getMessagesByChatId(currentChatId.value))
+	: []
+
+const sendMessage = (text: string) => {
+	const chat = items.value.find(elem => elem.chatId === currentChatId.value)
+
+	const to =
+		chat?.firstUser.email === user.value.email
+			? chat.secondUser.email
+			: chat?.firstUser.email
+
+	const from = user.value.email
+	socket.value.emit('sendMessage', to, from, text)
+}
+
+socket.value.on('getMessage', data => {
+	console.log(data.to, data.from, data.text)
+})
 
 onMounted(async () => {
 	if (authStore.getToken) {
@@ -51,9 +73,6 @@ onMounted(async () => {
 				messengerStore.setChats(authStore.getUser.email, authStore.getToken)
 			)
 	}
-	socket.value.on('connection', () => {
-		console.log(4324)
-	})
 
 	watch(user, () => {
 		socket.value.emit('addNewUser', user.value)

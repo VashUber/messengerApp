@@ -14,4 +14,5 @@ export interface Message {
 	text: string
 	to: string
 	from: string
+	chatId: string
 }
