@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { io } from 'socket.io-client'
 import VAside from '../components/VAside.vue'
 import VChat from '../components/VChat.vue'
@@ -40,8 +40,10 @@ const toggleModal = () => {
 }
 
 const items = computed(() => messengerStore.getChats)
+const user = computed(() => authStore.getUser)
+const socket = ref(io('ws://localhost:30054'))
 
-onMounted(() => {
+onMounted(async () => {
 	if (authStore.getToken) {
 		authStore
 			.setUser()
@@ -49,7 +51,13 @@ onMounted(() => {
 				messengerStore.setChats(authStore.getUser.email, authStore.getToken)
 			)
 	}
-	io('ws://localhost:30054')
+	socket.value.on('connection', () => {
+		console.log(4324)
+	})
+
+	watch(user, () => {
+		socket.value.emit('addNewUser', user.value)
+	})
 })
 </script>
 

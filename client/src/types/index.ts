@@ -9,3 +9,9 @@ export interface Chat {
 	secondUser: User
 	chatId: string
 }
+
+export interface Message {
+	text: string
+	to: string
+	from: string
+}

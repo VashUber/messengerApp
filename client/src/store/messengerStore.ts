@@ -1,16 +1,20 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
-import { Chat } from '../types'
+import { Chat, Message } from '../types'
 
 const useMessengerStore = defineStore({
 	id: 'messengerStore',
 	state: () => ({
-		chats: [] as Array<Chat>
+		chats: [] as Array<Chat>,
+		messages: [] as Array<Message>
 	}),
 	getters: {
 		getChats(): Array<Chat> {
 			return this.chats
-		}
+		},
+		getMessages: (state) => (chatId: string) => {
+			
+		} 
 	},
 	actions: {
 		async setChats(email: string, token: string) {
