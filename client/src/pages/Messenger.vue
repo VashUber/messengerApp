@@ -12,8 +12,6 @@
 		<VChat
 			v-if="currentChatId"
 			@sendMessage="sendMessage"
-			:messages="messages"
-			:currentChatId="currentChatId"
 		/>
 		<div v-else class="chat-else">
 			<span class="chat-else__msg">Выберите чат</span>
@@ -34,25 +32,21 @@ import { MessageRender } from '../types'
 const authStore = useAuthStore()
 const messengerStore = useMessengerStore()
 
-const currentChatId = ref<string | null>(null)
 const modalIsVisible = ref(false)
 
 const setCurrentChat = (elem: string, chatId: string) => {
-	currentChatId.value = chatId
+	messengerStore.setCurrentChatId(chatId)
 	messengerStore.setSecondUser(user.value.email, currentChatId.value)
 	messengerStore.setMessages(chatId, authStore.getToken, authStore.getUser.email)
 }
 const toggleModal = () => {
 	modalIsVisible.value = !modalIsVisible.value
 }
-const getMessagesByChatId = messengerStore.getMessages
+
+const currentChatId = computed(() => messengerStore.getCurrentChatId)
 
 const items = computed(() => messengerStore.getChats)
 const user = computed(() => authStore.getUser)
-const messages = computed(
-	(): MessageRender => getMessagesByChatId(currentChatId.value)
-)
-const chat = computed(() => messengerStore.getChatById(currentChatId.value))
 
 const socket = ref(io('ws://localhost:30054'))
 

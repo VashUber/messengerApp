@@ -8,7 +8,8 @@ const useMessengerStore = defineStore({
 		chats: [] as Array<Chat>,
 		messages: [] as Array<MessageRender>,
 		secondUserName: '' as string | undefined,
-		secondUserEmail: '' as string | undefined
+		secondUserEmail: '' as string | undefined,
+		currentChatId: ''
 	}),
 	getters: {
 		getChats(): Array<Chat> {
@@ -25,7 +26,8 @@ const useMessengerStore = defineStore({
 		getSecondUser: state => ({
 			name: state.secondUserName,
 			email: state.secondUserEmail
-		})
+		}),
+		getCurrentChatId: state => state.currentChatId
 	},
 	actions: {
 		async setChats(email: string, token: string) {
@@ -77,6 +79,9 @@ const useMessengerStore = defineStore({
 				this.secondUserName = chat?.secondUser.name
 				this.secondUserEmail = chat?.secondUser.email
 			}
+		},
+		setCurrentChatId(chatId: string) {
+			this.currentChatId = chatId
 		},
 		async setMessages(chatId: string, token: string, email: string) {
 			if (!this.messages.find(elem => elem.chatId === chatId)) {

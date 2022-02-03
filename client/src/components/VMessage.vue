@@ -36,6 +36,7 @@ const { message, chatId, user, secondUser } = defineProps<{
 	word-break: break-word;
 	gap: 10px;
 	border-radius: 4px;
+	margin-right: auto;
 
 	&_right {
 		margin-left: auto;

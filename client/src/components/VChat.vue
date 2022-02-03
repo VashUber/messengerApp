@@ -1,9 +1,9 @@
 <template>
 	<div class="chat">
-		<div class="chat__messages" v-if="messages">
+		<div class="chat__messages" v-if="messages" ref="chat">
 			<VMessage
-				v-for="message in messages.messages"
-				:key="message?.text"
+				v-for="(message, index) in messages.messages"
+				:key="index"
 				:message="message"
 				:chatId="currentChatId"
 				:user="user"
@@ -48,18 +48,24 @@ import VTextarea from './VTextarea.vue'
 import VMessage from './VMessage.vue'
 import VButton from './VButton.vue'
 import { MessageRender } from '../types'
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, onUpdated, ref, watch } from 'vue'
 import useMessengerStore from '../store/messengerStore'
 import useAuthStore from '../store/authStore'
 
 const authStore = useAuthStore()
 const messengerStore = useMessengerStore()
-const { messages, currentChatId } = defineProps<{ messages: MessageRender; currentChatId: string }>()
+
 const emits = defineEmits(['sendMessage'])
+const getMessagesById = messengerStore.getMessages
 
 const user = computed(() => authStore.getUser)
 const secondUser = computed(() => messengerStore.getSecondUser)
+
+const currentChatId = computed(() => messengerStore.getCurrentChatId)
+const messages = computed(() => getMessagesById(currentChatId.value))
+
 const newMessage = ref('')
+const chat = ref<HTMLDivElement | null>(null)
 
 const sendMessage = () => {
 	if (newMessage.value) {
@@ -67,6 +73,8 @@ const sendMessage = () => {
 		newMessage.value = ''
 	}
 }
+
+onUpdated(() => {})
 </script>
 
 <style scoped lang="scss">
@@ -116,3 +124,7 @@ const sendMessage = () => {
 	}
 }
 </style>
+
+function updated(arg0: () => void) { throw new Error('Function not
+implemented.') } function updated(arg0: () => void) { throw new Error('Function
+not implemented.') }
