@@ -75,8 +75,6 @@ const sendMessage = () => {
 }
 
 onMounted(() => {
-	console.log(543)
-
 	watch(
 		messages,
 		async () => {
