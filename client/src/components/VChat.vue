@@ -48,7 +48,7 @@ import VTextarea from './VTextarea.vue'
 import VMessage from './VMessage.vue'
 import VButton from './VButton.vue'
 import { MessageRender } from '../types'
-import { computed, onMounted, onUpdated, ref, watch } from 'vue'
+import { computed, onMounted, onUpdated, ref, watch, nextTick } from 'vue'
 import useMessengerStore from '../store/messengerStore'
 import useAuthStore from '../store/authStore'
 
@@ -74,7 +74,20 @@ const sendMessage = () => {
 	}
 }
 
-onUpdated(() => {})
+onMounted(() => {
+	console.log(543)
+
+	watch(
+		messages,
+		async () => {
+			await nextTick()
+			if (chat.value) {
+				chat.value.scrollTop = chat.value.scrollHeight
+			}
+		},
+		{ deep: true }
+	)
+})
 </script>
 
 <style scoped lang="scss">
@@ -124,7 +137,3 @@ onUpdated(() => {})
 	}
 }
 </style>
-
-function updated(arg0: () => void) { throw new Error('Function not
-implemented.') } function updated(arg0: () => void) { throw new Error('Function
-not implemented.') }
