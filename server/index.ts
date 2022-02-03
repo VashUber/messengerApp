@@ -6,6 +6,7 @@ import cors from "cors"
 import { Server } from "socket.io"
 import { createServer } from "http"
 import User from "./models/User"
+import Message from "./models/Message"
 
 dotenv.config()
 const app = express()
@@ -35,13 +36,20 @@ const getuser = async (to: string) => {
   return await User.find({ email: to })
 }
 
+const addMessageToDB = (chatId: string, text: string, from: string, to: string) => {
+  const message = new Message({ chatId, text, from, to })
+  message.save()
+  return
+}
+
 io.on("connect", (socket) => {
   socket.on("addNewUser", (user) => {
     usersOnline.push({ user, socket: socket.id })
   })
 
-  socket.on("sendMessage", (to: string, from: string, text) => {
+  socket.on("sendMessage", (to: string, from: string, text, chatId: string) => {
     const user = usersOnline.find((elem) => elem.user.email === to)
+    addMessageToDB(chatId, text, from, to)
 
     if (user) {
       io.to(user.socket).emit("getMessage", {

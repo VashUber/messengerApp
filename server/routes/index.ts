@@ -10,6 +10,7 @@ const Routes = (app: Express) => {
   app.get("/api/getuser", auth, userController.getUser)
   app.post("/api/createchat", auth, messengerController.createChat)
   app.get("/api/getchats", auth, messengerController.getChats)
+  app.get("/api/getmessages", auth, messengerController.getMessages)
 }
 
 export default Routes

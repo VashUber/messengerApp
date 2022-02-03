@@ -9,6 +9,14 @@ const Messagechema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  from: {
+    type: String,
+    require: true,
+  },
+  to: {
+    type: String,
+    require: true,
+  },
 })
 
 const Message = mongoose.model("Messege", Messagechema)

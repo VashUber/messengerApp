@@ -12,12 +12,17 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     if (process.env.TOKEN_KEY) {
-      const data = jsonwebtoken.verify(token.split(" ")[1], process.env.TOKEN_KEY, async (error, user) => {
-        if (error) return res.status(403).json("Токен не валидный")
+      const data = jsonwebtoken.verify(
+        token.split(" ")[1],
+        process.env.TOKEN_KEY,
+        async (error, user) => {
+          if (error) return res.status(403).json("Токен не валидный")
 
-        const potentialUser = await User.findOne({ email })
-        if (typeof user !== "string" && user && potentialUser.email === user.email) next()
-      })
+          const potentialUser = await User.findOne({ email })
+          if (typeof user !== "string" && user && potentialUser.email === user.email)
+            next()
+        }
+      )
     }
   } catch (e) {
     console.log(e)

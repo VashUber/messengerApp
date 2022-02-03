@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import User from "../models/User"
 import Chat from "../models/Chat"
 import uniqid from "uniqid"
+import Message from "../models/Message"
 
 const messengerController = {
   async createChat(req: Request, res: Response) {
@@ -57,7 +58,20 @@ const messengerController = {
     }
   },
 
-  async getMesseges(req: Request, res: Response) {},
+  async getMessages(req: Request, res: Response) {
+    try {
+      const { chatId } = req.query
+
+      if (chatId) {
+        const messages = await Message.find({ chatId })
+
+        if (Array.isArray(messages)) return res.send({ messages })
+        else return res.send({ messages: [messages] })
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  },
 }
 
 export default messengerController

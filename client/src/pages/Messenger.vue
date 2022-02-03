@@ -40,6 +40,7 @@ const modalIsVisible = ref(false)
 const setCurrentChat = (elem: string, chatId: string) => {
 	currentChatId.value = chatId
 	messengerStore.setSecondUser(user.value.email, currentChatId.value)
+	messengerStore.setMessages(chatId, authStore.getToken, authStore.getUser.email)
 }
 const toggleModal = () => {
 	modalIsVisible.value = !modalIsVisible.value
@@ -66,7 +67,13 @@ const sendMessage = (text: string) => {
 			text,
 			currentChatId.value
 		)
-		socket.value.emit('sendMessage', to.value.email, from, text)
+		socket.value.emit(
+			'sendMessage',
+			to.value.email,
+			from,
+			text,
+			currentChatId.value
+		)
 	}
 }
 

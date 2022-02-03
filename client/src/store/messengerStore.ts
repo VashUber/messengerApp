@@ -1,12 +1,12 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
-import { Chat, Message, MessageRender } from '../types'
+import { Chat, MessageRender } from '../types'
 
 const useMessengerStore = defineStore({
 	id: 'messengerStore',
 	state: () => ({
 		chats: [] as Array<Chat>,
-		messages: [] as Array<{ chatId: string; messages: Array<Message> }>,
+		messages: [] as Array<MessageRender>,
 		secondUserName: '' as string | undefined,
 		secondUserEmail: '' as string | undefined
 	}),
@@ -22,7 +22,10 @@ const useMessengerStore = defineStore({
 		getChatById: state => (chatId: string) => {
 			return state.chats.find(elem => elem.chatId === chatId)
 		},
-		getSecondUser: state => ({name: state.secondUserName, email: state.secondUserEmail})
+		getSecondUser: state => ({
+			name: state.secondUserName,
+			email: state.secondUserEmail
+		})
 	},
 	actions: {
 		async setChats(email: string, token: string) {
@@ -70,10 +73,29 @@ const useMessengerStore = defineStore({
 			if (chat?.firstUser.email !== userEmail) {
 				this.secondUserName = chat?.firstUser.name
 				this.secondUserEmail = chat?.firstUser.email
-			}
-			else {
+			} else {
 				this.secondUserName = chat?.secondUser.name
 				this.secondUserEmail = chat?.secondUser.email
+			}
+		},
+		async setMessages(chatId: string, token: string, email: string) {
+			if (!this.messages.find(elem => elem.chatId === chatId)) {
+				const response = await axios.get(
+					`http://localhost:30054/api/getmessages?email=${email}&chatId=${chatId}`,
+					{
+						headers: {
+							'content-Type': 'application/json',
+							Authorization: `Bearer ${token}`
+						}
+					}
+				)
+
+				if (response.data.messages.length !== 0) {
+					this.messages.push({
+						chatId,
+						messages: [...response.data.messages]
+					})
+				}
 			}
 		}
 	}
