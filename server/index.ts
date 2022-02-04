@@ -40,8 +40,6 @@ const addMessageToDB = async (
   from: string,
   to: string
 ) => {
-  console.log(text)
-
   const message = await new Message({ chatId, text, from, to })
   await message.save()
 }
@@ -54,7 +52,6 @@ const mapMessages = async () => {
         (user) => user.user.email === message.from || user.user.email === message.to
       ).length < 2
     ) {
-      console.log(message)
       chatsIdUnique.add(message.chatId)
       await addMessageToDB(message.chatId, message.text, message.from, message.to)
     }

@@ -134,23 +134,23 @@ const useMessengerStore = defineStore({
 					)
 
 					const chat = this.messages.find(elem => elem.chatId === chatId)
-					console.log(chat)
-
 					chat.messages = [...response.data.messages, ...chat.messages]
 					this.page--
 				}
 			} else {
-				const response = await axios.get(
-					`http://localhost:30054/api/getmessages?email=${email}&chatId=${chatId}&page=${this.page}`,
-					{
-						headers: {
-							'content-Type': 'application/json',
-							Authorization: `Bearer ${token}`
+				if (this.page >= 2) {
+					--this.page
+					const response = await axios.get(
+						`http://localhost:30054/api/getmessages?email=${email}&chatId=${chatId}&page=${this.page}`,
+						{
+							headers: {
+								'content-Type': 'application/json',
+								Authorization: `Bearer ${token}`
+							}
 						}
-					}
-				)
-
-				chat.messages = [response.data.messages, ...chat.messages]
+					)
+					chat.messages = [...response.data.messages, ...chat.messages]
+				}
 			}
 		},
 		setNewPage() {

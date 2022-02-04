@@ -1,6 +1,13 @@
 <template>
 	<div class="chat">
-		<div class="chat__messages" v-if="messages" ref="chat">
+		<div
+			class="chat__messages"
+			v-if="currentChatId !== '' && messages"
+			ref="chat"
+		>
+			<div class="chat__button-wrapper">
+				<VButton @click="loadMessages">Загрузить еще</VButton>
+			</div>
 			<VMessage
 				v-for="(message, index) in messages.messages"
 				:key="index"
@@ -60,12 +67,20 @@ const getMessagesById = messengerStore.getMessages
 
 const user = computed(() => authStore.getUser)
 const secondUser = computed(() => messengerStore.getSecondUser)
-
 const currentChatId = computed(() => messengerStore.getCurrentChatId)
 const messages = computed(() => getMessagesById(currentChatId.value))
 
 const newMessage = ref('')
 const chat = ref<HTMLDivElement | null>(null)
+const isLoadingOldMessages = ref(false)
+
+// const observe = ref<HTMLDivElement | null>(null)
+// const observer = ref()
+// const isMounted = ref(false)
+
+// observer.value = new IntersectionObserver(() => {
+// 	console.log(123)
+// })
 
 const sendMessage = () => {
 	if (newMessage.value) {
@@ -74,13 +89,31 @@ const sendMessage = () => {
 	}
 }
 
+const loadMessages = async () => {
+	isLoadingOldMessages.value = true
+	await messengerStore.setMessages(
+		currentChatId.value,
+		authStore.token,
+		user.value.email
+	)
+	isLoadingOldMessages.value = false
+}
+
 onMounted(() => {
 	watch(
 		messages,
 		async () => {
-			await nextTick()
+			let old = 0
+
 			if (chat.value) {
+				old = chat.value.scrollHeight
+			}
+
+			await nextTick()
+			if (chat.value && !isLoadingOldMessages.value) {
 				chat.value.scrollTop = chat.value.scrollHeight
+			} else {
+				chat.value.scrollTop = chat.value.scrollHeight - old
 			}
 		},
 		{ deep: true }
@@ -106,6 +139,11 @@ onMounted(() => {
 
 	&__button {
 		border-radius: 0;
+	}
+
+	&__button-wrapper {
+		display: flex;
+		justify-content: center;
 	}
 
 	&__messages {
