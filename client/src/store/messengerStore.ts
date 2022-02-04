@@ -9,7 +9,9 @@ const useMessengerStore = defineStore({
 		messages: [] as Array<MessageRender>,
 		secondUserName: '' as string | undefined,
 		secondUserEmail: '' as string | undefined,
-		currentChatId: ''
+		currentChatId: '',
+		page: 1,
+		pagingCounter: 1
 	}),
 	getters: {
 		getChats(): Array<Chat> {
@@ -86,7 +88,7 @@ const useMessengerStore = defineStore({
 		async setMessages(chatId: string, token: string, email: string) {
 			if (!this.messages.find(elem => elem.chatId === chatId)) {
 				const response = await axios.get(
-					`http://localhost:30054/api/getmessages?email=${email}&chatId=${chatId}`,
+					`http://localhost:30054/api/getmessages?email=${email}&chatId=${chatId}&page=${this.page}`,
 					{
 						headers: {
 							'content-Type': 'application/json',
@@ -96,12 +98,16 @@ const useMessengerStore = defineStore({
 				)
 
 				if (response.data.messages.length !== 0) {
+					if (this.pagingCounter === 1) this.pagingCounter = response.data.pagingCounter
 					this.messages.push({
 						chatId,
 						messages: [...response.data.messages]
 					})
 				}
 			}
+		},
+		setNewPage() {
+			this.page++
 		}
 	}
 })

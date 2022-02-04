@@ -64,10 +64,10 @@ const messengerController = {
 
       if (chatId) {
         // @ts-ignore
-        const messages = await Message.paginate({ chatId }, { limit: 10, page })
+        const { docs, pagingCounter } = await Message.paginate({ chatId }, { limit: 10, page: 1 })
 
-        if (Array.isArray(messages)) return res.send({ messages })
-        else return res.send({ messages: [messages] })
+        if (Array.isArray(docs)) return res.send({ messages: docs, pagingCounter })
+        else return res.send({ messages: [docs] })
       }
     } catch (e) {
       console.log(e)
