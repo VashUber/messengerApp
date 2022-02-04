@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import mongoosePaginate from "mongoose-paginate-v2"
 
 const Messagechema = new mongoose.Schema({
   chatId: {
@@ -19,6 +20,7 @@ const Messagechema = new mongoose.Schema({
   },
 })
 
+Messagechema.plugin(mongoosePaginate)
 const Message = mongoose.model("Messege", Messagechema)
 
 export default Message

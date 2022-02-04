@@ -60,10 +60,11 @@ const messengerController = {
 
   async getMessages(req: Request, res: Response) {
     try {
-      const { chatId } = req.query
+      const { chatId, page } = req.query
 
       if (chatId) {
-        const messages = await Message.find({ chatId })
+        // @ts-ignore
+        const messages = await Message.paginate({ chatId }, { limit: 10, page })
 
         if (Array.isArray(messages)) return res.send({ messages })
         else return res.send({ messages: [messages] })
