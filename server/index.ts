@@ -32,12 +32,16 @@ Routes(app)
 
 let usersOnline: Array<{ user: { email: string }; socket: string }> = []
 
-const messages: Array<{ chatId: string; text: string; from: string; to: string }> =
-  []
+let messages: Array<{ chatId: string; text: string; from: string; to: string }> = []
 
-const addMessageToDB = (chatId: string, text: string, from: string, to: string) => {
-  const message = new Message({ chatId, text, from, to })
-  message.save()
+const addMessageToDB = async (
+  chatId: string,
+  text: string,
+  from: string,
+  to: string
+) => {
+  const message = await new Message({ chatId, text, from, to })
+  await message.save()
   return
 }
 
@@ -61,15 +65,26 @@ io.on("connect", (socket) => {
 
   socket.on("disconnect", () => {
     usersOnline = usersOnline.filter((user) => user.socket !== socket.id)
-    messages.forEach((message) => {
+    const chatsIdUnique = new Set()
+
+    messages.forEach(async (message) => {
       if (
         usersOnline.filter(
           (user) =>
             user.user.email === message.from || user.user.email === message.to
-        ).length === 0
+        ).length < 2
       ) {
-        addMessageToDB(message.chatId, message.text, message.from, message.to)
+        chatsIdUnique.add(message.chatId)
+        await addMessageToDB(message.chatId, message.text, message.from, message.to)
       }
     })
+
+    const chatsId = [...chatsIdUnique]
+
+    chatsId.forEach((elem) => {
+      messages = messages.filter((elem) => elem.chatId !== elem.chatId)
+    })
+
+    console.log(messages)
   })
 })

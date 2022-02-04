@@ -11,7 +11,7 @@ const useMessengerStore = defineStore({
 		secondUserEmail: '' as string | undefined,
 		currentChatId: '',
 		page: 1,
-		pagingCounter: 1
+		totalPages: 1
 	}),
 	getters: {
 		getChats(): Array<Chat> {
@@ -87,8 +87,20 @@ const useMessengerStore = defineStore({
 		},
 		async setMessages(chatId: string, token: string, email: string) {
 			if (!this.messages.find(elem => elem.chatId === chatId)) {
+				const pagesResponse = await axios.get(
+					`http://localhost:30054/api/getpagescount?email=${email}&chatId=${chatId}`,
+					{
+						headers: {
+							'content-Type': 'application/json',
+							Authorization: `Bearer ${token}`
+						}
+					}
+				)
+
+				this.totalPages = pagesResponse.data.totalPages
+
 				const response = await axios.get(
-					`http://localhost:30054/api/getmessages?email=${email}&chatId=${chatId}&page=${this.page}`,
+					`http://localhost:30054/api/getmessages?email=${email}&chatId=${chatId}&page=${this.totalPages}`,
 					{
 						headers: {
 							'content-Type': 'application/json',
@@ -98,7 +110,8 @@ const useMessengerStore = defineStore({
 				)
 
 				if (response.data.messages.length !== 0) {
-					if (this.pagingCounter === 1) this.pagingCounter = response.data.pagingCounter
+					if (this.totalPages === 1)
+						this.totalPages = response.data.pagingCounter
 					this.messages.push({
 						chatId,
 						messages: [...response.data.messages]

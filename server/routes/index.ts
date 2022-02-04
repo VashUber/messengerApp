@@ -11,6 +11,7 @@ const Routes = (app: Express) => {
   app.post("/api/createchat", auth, messengerController.createChat)
   app.get("/api/getchats", auth, messengerController.getChats)
   app.get("/api/getmessages", auth, messengerController.getMessages)
+  app.get("/api/getpagescount", auth, messengerController.getPagesCount)
 }
 
 export default Routes
