@@ -9,10 +9,7 @@
 			@setCurrentChat="setCurrentChat"
 			@toggleModal="toggleModal"
 		/>
-		<VChat
-			v-if="currentChatId"
-			@sendMessage="sendMessage"
-		/>
+		<VChat v-if="currentChatId" @sendMessage="sendMessage" />
 		<div v-else class="chat-else">
 			<span class="chat-else__msg">Выберите чат</span>
 		</div>
@@ -34,10 +31,19 @@ const messengerStore = useMessengerStore()
 
 const modalIsVisible = ref(false)
 
-const setCurrentChat = (elem: string, chatId: string) => {
+const setCurrentChat = async (elem: string, chatId: string) => {
 	messengerStore.setCurrentChatId(chatId)
 	messengerStore.setSecondUser(user.value.email, currentChatId.value)
-	messengerStore.setMessages(chatId, authStore.getToken, authStore.getUser.email)
+	await messengerStore.setTotalPages(
+		chatId,
+		authStore.getToken,
+		authStore.getUser.email
+	)
+	messengerStore.setMessages(
+		chatId,
+		authStore.getToken,
+		authStore.getUser.email
+	)
 }
 const toggleModal = () => {
 	modalIsVisible.value = !modalIsVisible.value

@@ -85,20 +85,24 @@ const useMessengerStore = defineStore({
 		setCurrentChatId(chatId: string) {
 			this.currentChatId = chatId
 		},
-		async setMessages(chatId: string, token: string, email: string) {
-			if (!this.messages.find(elem => elem.chatId === chatId)) {
-				const pagesResponse = await axios.get(
-					`http://localhost:30054/api/getpagescount?email=${email}&chatId=${chatId}`,
-					{
-						headers: {
-							'content-Type': 'application/json',
-							Authorization: `Bearer ${token}`
-						}
+		async setTotalPages(chatId: string, token: string, email: string) {
+			const pagesResponse = await axios.get(
+				`http://localhost:30054/api/getpagescount?email=${email}&chatId=${chatId}`,
+				{
+					headers: {
+						'content-Type': 'application/json',
+						Authorization: `Bearer ${token}`
 					}
-				)
+				}
+			)
 
-				this.totalPages = pagesResponse.data.totalPages
+			this.totalPages = pagesResponse.data.totalPages
+			this.page = this.totalPages
+		},
+		async setMessages(chatId: string, token: string, email: string) {
+			const chat = this.messages.find(elem => elem.chatId === chatId)
 
+			if (!chat) {
 				const response = await axios.get(
 					`http://localhost:30054/api/getmessages?email=${email}&chatId=${chatId}&page=${this.totalPages}`,
 					{
@@ -110,13 +114,43 @@ const useMessengerStore = defineStore({
 				)
 
 				if (response.data.messages.length !== 0) {
-					if (this.totalPages === 1)
-						this.totalPages = response.data.pagingCounter
 					this.messages.push({
 						chatId,
 						messages: [...response.data.messages]
 					})
 				}
+
+				if (response.data.messages.length < 10 && this.totalPages > 1) {
+					const response = await axios.get(
+						`http://localhost:30054/api/getmessages?email=${email}&chatId=${chatId}&page=${
+							this.totalPages - 1
+						}`,
+						{
+							headers: {
+								'content-Type': 'application/json',
+								Authorization: `Bearer ${token}`
+							}
+						}
+					)
+
+					const chat = this.messages.find(elem => elem.chatId === chatId)
+					console.log(chat)
+
+					chat.messages = [...response.data.messages, ...chat.messages]
+					this.page--
+				}
+			} else {
+				const response = await axios.get(
+					`http://localhost:30054/api/getmessages?email=${email}&chatId=${chatId}&page=${this.page}`,
+					{
+						headers: {
+							'content-Type': 'application/json',
+							Authorization: `Bearer ${token}`
+						}
+					}
+				)
+
+				chat.messages = [response.data.messages, ...chat.messages]
 			}
 		},
 		setNewPage() {
