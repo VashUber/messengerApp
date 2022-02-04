@@ -71,6 +71,12 @@ const useMessengerStore = defineStore({
 		},
 		signout() {
 			this.chats = []
+			this.messages = []
+			this.secondUserName = ''
+			this.secondUserEmail = ''
+			this.currentChatId = ''
+			this.page = 1
+			this.totalPages = 1
 		},
 		setSecondUser(userEmail: string, currentChatId: string) {
 			const chat = this.chats.find(elem => elem.chatId === currentChatId)
